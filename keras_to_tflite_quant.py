@@ -24,7 +24,7 @@ if len(sys.argv) != 4:
 
 def representative_dataset_gen():
     for _ in range(250):
-        yield [np.random.uniform(0.0, 1.0, size=(1, sys.argv[3], sys.argv[3], 3)).astype(np.float32)] # <-- Keep in mind, our tiny YOLOv3 model uses 416x416, full YOLOv3 - uses 608x608
+        yield [np.random.uniform(0.0, 1.0, size=(1, int(sys.argv[3]), int(sys.argv[3]), 3)).astype(np.float32)] # <-- Keep in mind, our tiny YOLOv3 model uses 416x416, full YOLOv3 - uses 608x608
 
 model_fn = sys.argv[1]
 out_fn = sys.argv[2]
