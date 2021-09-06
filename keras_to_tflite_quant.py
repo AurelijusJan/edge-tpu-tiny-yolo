@@ -22,8 +22,8 @@ def representative_dataset_gen(image_resolution):
     for _ in range(250):
         yield [np.random.uniform(0.0, 1.0, size=(1, image_resolution, image_resolution, 3)).astype(np.float32)] # <-- Keep in mind, our tiny YOLOv3 model uses 416x416, full YOLOv3 - uses 608x608
 
-if len(sys.argv) != 3:
-    print(f"Usage: {sys.argv[0]} <keras-model> <output-filename>")
+if len(sys.argv) != 4:
+    print(f"Usage: {sys.argv[0]} <keras-model> <output-filename> <image-resolution>")
     sys.exit(1)
 
 model_fn = sys.argv[1]
