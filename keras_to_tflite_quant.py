@@ -18,17 +18,16 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-def representative_dataset_gen(image_resolution):
-    for _ in range(250):
-        yield [np.random.uniform(0.0, 1.0, size=(1, image_resolution, image_resolution, 3)).astype(np.float32)] # <-- Keep in mind, our tiny YOLOv3 model uses 416x416, full YOLOv3 - uses 608x608
-
 if len(sys.argv) != 4:
     print(f"Usage: {sys.argv[0]} <keras-model> <output-filename> <image-resolution>")
     sys.exit(1)
 
+def representative_dataset_gen():
+    for _ in range(250):
+        yield [np.random.uniform(0.0, 1.0, size=(1, sys.argv[3], sys.argv[3], 3)).astype(np.float32)] # <-- Keep in mind, our tiny YOLOv3 model uses 416x416, full YOLOv3 - uses 608x608
+
 model_fn = sys.argv[1]
 out_fn = sys.argv[2]
-img_res = sys.argv[3]
 
 # Convert and apply full integer quantization
 converter = tf.compat.v1.lite.TFLiteConverter.from_keras_model_file(model_fn)
@@ -38,7 +37,7 @@ converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
 # Set inputs and outputs of network to 8-bit unsigned integer
 converter.inference_input_type = tf.uint8
 converter.inference_output_type = tf.uint8
-converter.representative_dataset = representative_dataset_gen(img_res)
+converter.representative_dataset = representative_dataset_gen
 tflite_model = converter.convert()
 
 open(sys.argv[2], "wb").write(tflite_model)
